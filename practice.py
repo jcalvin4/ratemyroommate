@@ -1,10 +1,30 @@
-from flask import Flask
+import os
+from flask import Flask, render_template, request, redirect
+from db import db
 from markupsafe import escape
 
-app = Flask(__name__)
-@app.route("/")
-def index():
-    return 'Index Page'
-@app.route("/hello")
-def hello_world():
-    return "<p> Hello, World! <p>"
+
+
+def create_app(test_config=None):
+    app = Flask(__name__)
+    
+
+    @app.route("/")
+    def home():
+        return render_template('home.html')
+
+    @app.route("/about")
+    def aboutpage():
+        return render_template('about.html')
+
+    @app.route("/ratearoommate")
+
+    def formpage():
+        return render_template('ratearoommate.html')
+    
+    return app
+app = create_app()
+
+app.run(debug=True)
+
+

@@ -3,9 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+    <title>{% block title %}Rate My Roommate{% endblock %}</title>
 </head>
 <body>
-    
+    <header>
+        <div id="title"><h1>Rate Your Roommate</h1></div>    
+        <div class="nav-div">
+            <nav>
+                <ul>
+                    <li>
+                       <a href="{{ url_for('home') }}">Home</a>  
+                    </li>
+                    <li>
+                        <a href="{{ url_for('formpage') }}">Rate Your Roommate</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('aboutpage') }}">About</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="body1">
+        {% block content %}{% endblock %}
+    </div>
 </body>
 </html>
