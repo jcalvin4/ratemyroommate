@@ -20,7 +20,7 @@ def create_app(test_config=None):
     @app.route("/ratearoommate")
 
     def formpage():
-        return render_template('ratearoommate.html')
+        return render_template('ratearoommatepage.html')
     
     return app
 app = create_app()
