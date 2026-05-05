@@ -1,6 +1,5 @@
 import os
 from flask import Flask, render_template, request, redirect
-from db import db
 from markupsafe import escape
 
 
