@@ -27,6 +27,7 @@ header {
     border-radius: 8px;
     box-shadow: 4px 4px 10px rgba(0.25,0.25,0.25,0.25);
     place-items: center;
+    background-color: white;
 }
 
 li {
@@ -62,12 +63,24 @@ li:hover{
     width: 70%;
     padding: 15px;
     border-radius: 10px;
-    background-color: grey;
+    
 
 }
 
 .searchinput {
-    border-radius: 10px;
+    border-radius: 20px;
     box-shadow: 4px 4px 10px rgba(0.25,0.25,0.25,0.25);
     border: .25px, solid black;
+    padding: 10px 10px;
+    width: 70%;
+    background-color: rgb(232, 232, 232);
+}
+
+.searchinput:hover {
+    background-color: rgb(255, 255, 255);
+    
+}
+
+.searchinput:focus {
+    background-color: rgb(255, 255, 255);
 }
