@@ -22,7 +22,7 @@ header {
     margin: 0 auto;
     width: 85%;
     border: .5px, solid black;
-    height:100%;
+    height: auto;
     margin-top: 20px;
     border-radius: 8px;
     box-shadow: 4px 4px 10px rgba(0.25,0.25,0.25,0.25);
@@ -83,4 +83,169 @@ li:hover{
 
 .searchinput:focus {
     background-color: rgb(255, 255, 255);
+}
+
+.questionaire-group-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.questionaire-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    width: 80%;
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 4px 4px 10px rgba(0.25,0.25,0.25,0.25);
+    background-color: rgb(172, 18, 18);
+}
+
+
+.radio-row-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; 
+    width: 100%;
+    margin-top: 10px;
+}
+
+
+.radio-column-item {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;    
+    gap: 5px;               
+    color: white;          
+}
+
+
+#gender {
+    height: 54px;
+}
+
+/* --- Outer Reset to Override .body1 center conflicts --- */
+.bio-page-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+    box-sizing: border-box;
+}
+
+/* Main Container (Dark Gray Background matching image_4a7515.png) */
+.bio-container {
+    background-color: #595959; /* Matching wireframe dark grey background */
+    width: 90%;
+    max-width: 1100px;
+    padding: 30px;
+    display: flex; /* Forces Left and Right columns side-by-side */
+    flex-direction: row;
+    gap: 30px;
+    box-sizing: border-box;
+    align-items: flex-start;
+}
+
+/* Common Wireframe Box Defaults */
+.wireframe-box {
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    box-sizing: border-box;
+}
+
+/* ================= LEFT COLUMN ================= */
+.bio-sidebar {
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex-shrink: 0;
+}
+
+/* Profile Picture Box */
+.profile-pic-box {
+    width: 100%;
+    height: 260px;
+    position: relative;
+}
+
+/* SVG Line Drawing for Crisp Non-overflowing 'X' */
+.x-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Rating Row (Square Box + Text Box side-by-side) */
+.rating-summary-row {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    width: 100%;
+    align-items: stretch;
+}
+
+/* Small Icon Square */
+.small-icon-box {
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+}
+
+/* Rating Text Box */
+.rating-label-box {
+    flex-grow: 1;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 13px;
+    font-weight: bold;
+    color: #000000;
+    line-height: 1.2;
+    font-family: Arial, sans-serif;
+}
+
+/* ================= RIGHT COLUMN ================= */
+.bio-main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Main Cards (Bio & Detailed Ratings) */
+.content-card {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.bio-card {
+    min-height: 200px;
+}
+
+.rating-card {
+    min-height: 240px;
+}
+
+.content-card h3 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #000000;
+}
+
+.content-card p {
+    margin: 0;
+    font-size: 15px;
+    color: #000000;
 }

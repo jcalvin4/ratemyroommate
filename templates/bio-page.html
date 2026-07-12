@@ -1,0 +1,63 @@
+{% extends "basic_template.html" %}
+{% block title %}Bio Page{% endblock %}
+
+{% block content %}
+<div class="bio-page-wrapper">
+    <div class="bio-container">
+        
+        <!-- LEFT COLUMN: Profile & Ratings -->
+        <div class="bio-sidebar">
+            <!-- Main Profile Pic Box with 'X' -->
+            <div class="wireframe-box profile-pic-box">
+                {% if user and user.profile_image %}
+                    <img src="{{ user.profile_image }}" alt="{{ user.name }}'s Profile Picture" class="profile-img">
+                {% else %}
+                    <!-- SVG Placeholder X -->
+                    <svg class="x-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                        <line x1="0" y1="0" x2="100" y2="100" stroke="#000" stroke-width="1"/>
+                        <line x1="100" y1="0" x2="0" y2="100" stroke="#000" stroke-width="1"/>
+                    </svg>
+                {% endif %}
+            </div>
+
+            <!-- Small Rating Row -->
+            <div class="rating-summary-row">
+                <!-- Small Square Box with 'X' -->
+                <div class="wireframe-box small-icon-box">
+                    <svg class="x-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                        <line x1="0" y1="0" x2="100" y2="100" stroke="#000" stroke-width="1.5"/>
+                        <line x1="100" y1="0" x2="0" y2="100" stroke="#000" stroke-width="1.5"/>
+                    </svg>
+                </div>
+
+                <!-- Average Star Rating Label Box -->
+                <div class="wireframe-box rating-label-box">
+                    <span>Average<br>Star<br>Rating</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: Bio & Star Ratings -->
+        <div class="bio-main-content">
+            <!-- Bio Box -->
+            <div class="wireframe-box content-card bio-card">
+                <h3>Bio:</h3>
+                <p>{{ user.bio if user and user.bio else 'No bio provided yet.' }}</p>
+            </div>
+
+            <!-- Detailed Rating Box -->
+            <div class="wireframe-box content-card rating-card">
+                <h3>Detailed star rating</h3>
+                {% if user and user.ratings %}
+                    <ul>
+                        {% for rating in user.ratings %}
+                            <li>{{ rating.category }}: {{ rating.score }} / 5</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
