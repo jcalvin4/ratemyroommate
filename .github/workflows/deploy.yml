@@ -1,0 +1,30 @@
+name: Deploy Flask to AWS Elastic Beanstalk
+
+on:
+  push:
+    branches:
+      - main  # Runs automatically whenever you push code to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Download your repo code onto the runner
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Step 2: Create the ZIP file automatically (excluding venv & pycache!)
+      - name: Generate Deployment ZIP
+        run: zip -r deploy.zip . -x "*.git*" "venv/*" "__pycache__/*"
+
+      # Step 3: Deploy ZIP directly to Elastic Beanstalk
+      - name: Deploy to AWS Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v22
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: 'my-flask-app'        # Must match your AWS Application Name
+          environment_name: 'Myflaskapp-env'      # Must match your AWS Environment Name
+          version_label: "deploy-${{ github.sha }}"
+          region: 'us-east-1'                     # Your AWS Region
+          deployment_package: 'deploy.zip'
