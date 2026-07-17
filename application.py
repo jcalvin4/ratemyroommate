@@ -17,7 +17,7 @@ def create_app(test_config=None):
         name='oidc',
         authority='https://cognito-idp.us-west-2.amazonaws.com/us-west-2_4lor5BvYC',
         client_id='6luip31388jlngdepqlv2oq8h5',
-        client_secret=os.environ.get('COGNITO_CLIENT_SECRET', '<client secret>'), # Replace with your real client secret or set in env
+        client_secret=os.environ.get('COGNITO_CLIENT_SECRET'), # Replace with your real client secret or set in env
         server_metadata_url='https://cognito-idp.us-west-2.amazonaws.com/us-west-2_4lor5BvYC/.well-known/openid-configuration',
         client_kwargs={'scope': 'phone openid email'}
     )
