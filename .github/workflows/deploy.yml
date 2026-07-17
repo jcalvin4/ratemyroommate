@@ -23,8 +23,8 @@ jobs:
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: 'my-flask-app'        # Must match your AWS Application Name
-          environment_name: 'Myflaskapp-env'      # Must match your AWS Environment Name
+          application_name: 'ratemyroommate'        # Must match your AWS Application Name
+          environment_name: 'Ratemyroommate-env'      # Must match your AWS Environment Name
           version_label: "deploy-${{ github.sha }}"
-          region: 'us-east-1'                     # Your AWS Region
+          region: 'us-west-2'                     # Your AWS Region
           deployment_package: 'deploy.zip'
