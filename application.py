@@ -14,6 +14,7 @@ def create_app(test_config=None):
     #Tell Flask it is behind a proxy (CloudFront) so url_for uses https:// ---
     application.wsgi_app = ProxyFix(application.wsgi_app, x_proto=1, x_host=1)
     
+    application.config['PREFERRED_URL_SCHEME'] = 'https'
     # Secret key for session management
     application.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 
@@ -50,10 +51,11 @@ def create_app(test_config=None):
     # --- Authentication Routes ---
     @application.route("/login")
     def login():
-        # Authlib uses url_for under the hood here. 
-        # ProxyFix ensures this dynamic URL builds with 'https://' automatically.
-        redirect_uri = url_for('authorize', _external=True)
-        return cognito.authorize_redirect(redirect_uri)
+       
+        
+        production_redirect_uri = "https://roomiestatz.com/authorize"
+        
+        return cognito.authorize_redirect(production_redirect_uri)
 
     @application.route("/authorize")
     def authorize():
