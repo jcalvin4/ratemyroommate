@@ -8,8 +8,10 @@ from forms import QuestionaireForm
 
 def create_app(test_config=None):
     application = Flask(__name__)
+
+    application.config['SERVER_NAME'] = 'roomiestatz.com'
     
-    # --- ADDED: Tell Flask it is behind a proxy (CloudFront) so url_for uses https:// ---
+    #Tell Flask it is behind a proxy (CloudFront) so url_for uses https:// ---
     application.wsgi_app = ProxyFix(application.wsgi_app, x_proto=1, x_host=1)
     
     # Secret key for session management
