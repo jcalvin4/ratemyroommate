@@ -34,6 +34,16 @@ def create_app(test_config=None):
                 return redirect(url_for('login'))
             return f(*args, **kwargs)
         return decorated_function
+    
+    @application.route("/debug-redirect")
+    def debug_redirect():
+        # This prints out exactly what Authlib/Flask are building
+        generated_url = url_for('authorize', _external=True, _scheme='https')
+        return {
+            "What_Flask_Generates": generated_url,
+            "Current_Request_Host_Header": request.headers.get('Host'),
+            "Current_Request_Scheme": request.scheme
+        }
 
     # --- Authentication Routes ---
     @application.route("/login")
