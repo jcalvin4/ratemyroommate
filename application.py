@@ -51,11 +51,10 @@ def create_app(test_config=None):
     # --- Authentication Routes ---
     @application.route("/login")
     def login():
-       
-        
-        production_redirect_uri = "https://roomiestatz.com/authorize"
-        
-        return cognito.authorize_redirect(production_redirect_uri)
+        # Authlib uses url_for under the hood here. 
+        # ProxyFix ensures this dynamic URL builds with 'https://' automatically.
+        redirect_uri = url_for('authorize', _external=True)
+        return cognito.authorize_redirect(redirect_uri)
 
     @application.route("/authorize")
     def authorize():
