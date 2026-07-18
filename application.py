@@ -57,7 +57,7 @@ def create_app(test_config=None):
         
         # --- FIXED: Use your actual Cognito domain prefix here ---
         # It should look something like: https://<your-domain-prefix>.auth.us-west-2.amazoncognito.com
-        cognito_domain = "https://your-app-domain-prefix.auth.us-west-2.amazoncognito.com" 
+        cognito_domain = "https://us-west-24lor5bvyc.auth.us-west-2.amazoncognito.com"
         
         client_id = "6luip31388jlngdepqlv2oq8h5"
         logout_redirect = url_for('home', _external=True)
