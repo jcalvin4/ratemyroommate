@@ -94,6 +94,7 @@ def create_app(test_config=None):
         
         client_id = "6luip31388jlngdepqlv2oq8h5"
         logout_redirect = url_for('home', _external=True, _scheme='https')
+        print(f"DEBUG: logout_redirect = {logout_redirect}")
         return redirect(f"{cognito_domain}/logout?client_id={client_id}&logout_uri={logout_redirect}")
 
     # --- Standard App Routes ---
