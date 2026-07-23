@@ -93,7 +93,7 @@ def create_app(test_config=None):
         cognito_domain = "https://us-west-24lor5bvyc.auth.us-west-2.amazoncognito.com"
         
         client_id = "6luip31388jlngdepqlv2oq8h5"
-        logout_redirect = url_for('home', _external=True)
+        logout_redirect = url_for('home', _external=True, _scheme='https')
         return redirect(f"{cognito_domain}/logout?client_id={client_id}&logout_uri={logout_redirect}")
 
     # --- Standard App Routes ---
