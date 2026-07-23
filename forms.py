@@ -18,3 +18,10 @@ class QuestionaireForm(FlaskForm):
     bio = TextAreaField('Bio')
     profile_pic = FileField('Profile Picture', validators=[FileAllowed(['jpg', 'png'], 'Images only!')])
     submit = SubmitField('Submit')
+
+class RoommateRatingForm(FlaskForm):
+    rated_user_id = StringField('Rated User ID', validators=[DataRequired()])
+    cleanliness = RadioField('Cleanliness', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')], validators=[DataRequired()])
+    communication = RadioField('Communication', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')], validators=[DataRequired()])
+    noise = RadioField('Noise Level', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')], validators=[DataRequired()])
+    submit = SubmitField('Submit')

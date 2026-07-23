@@ -4,7 +4,7 @@ from flask import Flask, flash, render_template, request, redirect, url_for, ses
 from authlib.integrations.flask_client import OAuth
 from werkzeug.middleware.proxy_fix import ProxyFix  # <-- ADDED
 from markupsafe import escape
-from forms import QuestionaireForm
+from forms import QuestionaireForm, RoommateRatingForm
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -68,6 +68,12 @@ def create_app(test_config=None):
             "Current_Request_Host_Header": request.headers.get('Host'),
             "Current_Request_Scheme": request.scheme
         }
+
+    @application.route("/init-db")
+    def init_db():
+        from models import User, QuestionaireRating, RoommateRating
+        db.create_all()
+        return "Tables created!"
 
     # --- Authentication Routes ---
     @application.route("/login")
@@ -135,15 +141,19 @@ def create_app(test_config=None):
 
     @application.route("/ratearoommate")
     @login_required  
-    def formpage():
-        form = QuestionaireForm()
+    def ratearoommate():
+        form = RoommateRatingForm()
         return render_template('roommaterate.html', form=form, user=session.get('user'))
     @application.route("/bio")
     @login_required  
     def bio():
         return render_template('bio-page.html', user=session.get('user'))
 
+    
+
     return application
+
+
 
 application = create_app()
 

@@ -50,5 +50,7 @@ class RoommateRating(db.Model):
 
     communication = db.Column(db.Integer, nullable=False)
 
+    noise = db.Column(db.Integer, nullable=False)
+
     rater = db.relationship('User', foreign_keys=[rater_id])
     rated_user = db.relationship('User', foreign_keys=[rated_user_id])
