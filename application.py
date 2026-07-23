@@ -113,7 +113,7 @@ def create_app(test_config=None):
         return render_template('roommaterate.html', form=form, user=session.get('user'))
     @application.route("/bio")
     @login_required  
-    def formpage():
+    def bio():
         return render_template('bio-page.html', user=session.get('user'))
 
     return application
