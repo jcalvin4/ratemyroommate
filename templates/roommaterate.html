@@ -1,0 +1,68 @@
+{% extends "basic_template.html" %}
+{% block title %}Rate a Roommate{% endblock %}
+{% block content %}
+<div class="roommateratingformpage">
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <div class="roommaterating-group-container">
+
+            <div class="roommaterating-group" id="rated_user">
+                {{ form.rated_user.label }}
+                {{ form.rated_user() }}
+            </div>
+
+            <div class="roommaterating-group">
+                {{ form.cleanliness.label }}
+                <div class="radio-row-container">
+                    {% for subfield in form.cleanliness %}
+                        <div class="radio-column-item">
+                            {{ subfield.label }}
+                            {{ subfield() }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="roommaterating-group">
+                {{ form.communication.label }}
+                <div class="radio-row-container">
+                    {% for subfield in form.communication %}
+                        <div class="radio-column-item">
+                            {{ subfield.label }}
+                            {{ subfield() }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="roommaterating-group">
+                {{ form.payment_reliability.label }}
+                <div class="radio-row-container">
+                    {% for subfield in form.payment_reliability %}
+                        <div class="radio-column-item">
+                            {{ subfield.label }}
+                            {{ subfield() }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <p>{{ form.submit() }}</p>
+
+            {% for error in form.rated_user.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+            {% for error in form.cleanliness.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+            {% for error in form.communication.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+            {% for error in form.payment_reliability.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+
+        </div>
+    </form>
+</div>
+{% endblock %}

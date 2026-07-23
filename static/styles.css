@@ -249,3 +249,32 @@ li:hover{
     font-size: 15px;
     color: #000000;
 }
+
+/* Rate Roommate Page */
+
+.roommateratingformpage {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.roommaterating-group-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.roommaterating-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    width: 80%;
+    padding: 50px;
+    border-radius: 10px;
+    box-shadow: 4px 4px 10px rgba(0.25,0.25,0.25,0.25);
+    background-color: rgb(172, 18, 18);
+}

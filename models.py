@@ -1,6 +1,4 @@
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
+from application import db
 
 class User(db.Model):
     __tablename__ = 'users'
@@ -38,3 +36,19 @@ class QuestionaireRating(db.Model):
     bio = db.Column(db.Text, nullable=True)
     
     profile_pic = db.Column(db.String(500), nullable=True)  # Store the filename or path of the uploaded profile picture
+
+class RoommateRating(db.Model):
+    __tablename__ = 'roommate_ratings'
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    rater_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    rated_user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    cleanliness = db.Column(db.Integer, nullable=False)
+
+    communication = db.Column(db.Integer, nullable=False)
+
+    rater = db.relationship('User', foreign_keys=[rater_id])
+    rated_user = db.relationship('User', foreign_keys=[rated_user_id])

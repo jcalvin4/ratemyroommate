@@ -12,19 +12,28 @@
         <div class="nav-div">
             <nav>
                 <ul id="nav-list">
-                    <li>
-                       <a href="{{ url_for('home') }}">Home</a>  
-                    </li>
-                    <li>
-                        <a href="{{ url_for('formpage') }}">Rate Your Roommate</a>
-                    </li>
-                    <li>
-                        <a href="{{ url_for('aboutpage') }}">About</a>
-                    </li>
-                    <li>
-                        <a href="{{ url_for('login') }}">Login</a>
-                    </li>
-                </ul>
+    <li>
+       <a href="{{ url_for('home') }}">Home</a>  
+    </li>
+    <li>
+        <a href="{{ url_for('formpage') }}">Rate Your Roommate</a>
+    </li>
+    <li>
+        <a href="{{ url_for('aboutpage') }}">About</a>
+    </li>
+    {% if user %}
+        <li>
+            <a href="{{ url_for('bio') }}">Bio</a>
+        </li>
+        <li>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </li>
+    {% else %}
+        <li>
+            <a href="{{ url_for('login') }}">Login</a>
+        </li>
+    {% endif %}
+</ul>
             </nav>
         </div>
     </header>

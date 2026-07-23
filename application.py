@@ -5,6 +5,9 @@ from authlib.integrations.flask_client import OAuth
 from werkzeug.middleware.proxy_fix import ProxyFix  # <-- ADDED
 from markupsafe import escape
 from forms import QuestionaireForm
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
 
 def create_app(test_config=None):
     application = Flask(__name__)
@@ -17,6 +20,20 @@ def create_app(test_config=None):
     application.config['PREFERRED_URL_SCHEME'] = 'https'
     # Secret key for session management
     application.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+
+     # --- database config ---
+    db_user = os.environ.get('DB_USER')
+    db_password = os.environ.get('DB_PASSWORD')
+    db_host = os.environ.get('DB_HOST')
+    db_port = os.environ.get('DB_PORT', '3306')
+    db_name = os.environ.get('DB_NAME')
+
+    application.config['SQLALCHEMY_DATABASE_URI'] = (
+        f"mysql+pymysql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+    )
+    application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    db.init_app(application) 
 
     # --- Initialize Cognito OAuth ---
     oauth = OAuth(application)
@@ -37,7 +54,11 @@ def create_app(test_config=None):
                 return redirect(url_for('login'))
             return f(*args, **kwargs)
         return decorated_function
-    
+
+    @application.context_processor
+    def inject_user():
+        return dict(user=session.get('user'))
+        
     @application.route("/debug-redirect")
     def debug_redirect():
         # This prints out exactly what Authlib/Flask are building
@@ -68,7 +89,6 @@ def create_app(test_config=None):
     def logout():
         session.clear()
         
-        # --- FIXED: Use your actual Cognito domain prefix here ---
         # It should look something like: https://<your-domain-prefix>.auth.us-west-2.amazoncognito.com
         cognito_domain = "https://us-west-24lor5bvyc.auth.us-west-2.amazoncognito.com"
         
@@ -87,6 +107,11 @@ def create_app(test_config=None):
         return render_template('about.html')
 
     @application.route("/ratearoommate")
+    @login_required  
+    def formpage():
+        form = QuestionaireForm()
+        return render_template('roommaterate.html', form=form, user=session.get('user'))
+    @application.route("/bio")
     @login_required  
     def formpage():
         form = QuestionaireForm()
