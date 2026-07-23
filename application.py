@@ -149,6 +149,11 @@ def create_app(test_config=None):
     def bio():
         return render_template('bio-page.html', user=session.get('user'))
 
+    @application.route("/formpage")
+    @login_required
+    def formpage():
+        form = QuestionaireForm()
+        return render_template('formpage.html', form=form, user=session.get('user'))
     
 
     return application
