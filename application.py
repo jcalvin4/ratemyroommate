@@ -1,6 +1,6 @@
 import os
 from functools import wraps
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, flash, render_template, request, redirect, url_for, session
 from authlib.integrations.flask_client import OAuth
 from werkzeug.middleware.proxy_fix import ProxyFix  # <-- ADDED
 from markupsafe import escape
@@ -81,8 +81,34 @@ def create_app(test_config=None):
     def authorize():
         token = cognito.authorize_access_token()
         user_info = token.get('userinfo')
+
         if user_info:
             session['user'] = user_info
+
+            # Find or create the User row tied to this Cognito account
+            from models import User, QuestionaireRating
+
+            user = User.query.filter_by(cognito_sub=user_info['sub']).first()
+
+            if not user:
+                user = User(
+                    cognito_sub=user_info['sub'],
+                    fname=user_info.get('given_name', ''),
+                    lname=user_info.get('family_name', ''),
+                    email=user_info.get('email', '')
+                )
+                db.session.add(user)
+                db.session.commit()
+
+            session['user_db_id'] = user.id  # store the local DB id for later lookups
+
+            # Check if they've completed the questionnaire
+            has_questionnaire = QuestionaireRating.query.filter_by(user_id=user.id).first()
+
+            if not has_questionnaire:
+                flash("Congrats you have an account now let's build your bio")
+                return redirect(url_for('formpage'))
+
         return redirect(url_for('home'))
 
     @application.route("/logout")
