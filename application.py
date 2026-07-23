@@ -69,12 +69,6 @@ def create_app(test_config=None):
             "Current_Request_Scheme": request.scheme
         }
 
-    @application.route("/init-db")
-    def init_db():
-        from models import User, QuestionaireRating, RoommateRating
-        db.create_all()
-        return "Tables created!"
-
     # --- Authentication Routes ---
     @application.route("/login")
     def login():
