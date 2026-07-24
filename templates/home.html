@@ -1,8 +1,20 @@
 {% extends "basic_template.html" %}
 {% block title %}Home Page{% endblock %}
 {% block content %}
-<div class="homebody">
-<h2>Looking for a roommate? You're in the right place!</h2>
+<div class="home-page-wrapper">
+    <div class="home-container">
+        <p class="home-subtitle">Rate Your Room Mate!</p>
+        <h1 class="home-headline">The best way to find room mate and feel safe and secure!</h1>
 
+        <a href="{{ url_for('helppage') }}" class="how-do-i-start-btn">How Do I Start?</a>
+
+        <p class="home-or">OR</p>
+
+        <p class="home-search-label">Search for a potential room mate here.</p>
+
+        <div class="home-search-bar">
+            <input type="search" placeholder="search" class="searchinput">
+        </div>
+    </div>
 </div>
 {% endblock %}

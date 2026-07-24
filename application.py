@@ -271,7 +271,10 @@ def create_app(test_config=None):
                 flash("Profile picture updated!")
 
         return redirect(url_for('bio'))
-    
+
+    @application.route("/helppage")
+    def helppage():
+        return render_template('helppage.html')
 
     return application
 
