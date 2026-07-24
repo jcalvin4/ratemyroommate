@@ -104,8 +104,6 @@ def create_app(test_config=None):
     # --- Authentication Routes ---
     @application.route("/login")
     def login():
-        # Authlib uses url_for under the hood here. 
-        # ProxyFix ensures this dynamic URL builds with 'https://' automatically.
         redirect_uri = url_for('authorize', _external=True, _scheme='https')
         return cognito.authorize_redirect(redirect_uri)
 
