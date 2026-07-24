@@ -1,9 +1,16 @@
-html, body{
+/* ============================================================
+   GLOBAL / BASE STYLES
+   ============================================================ */
+html, body {
     height: 100%;
     margin: 0;
     padding: 0;
     background-color: rgb(241, 236, 227);
 }
+
+/* ============================================================
+   HEADER / NAVIGATION
+   ============================================================ */
 header {
     background-color: gray;
     width: 90%;
@@ -11,9 +18,61 @@ header {
     border: .5px, groove black;
     border-radius: 10px;
     box-shadow: 4px 4px 10px rgba(0.25,0.25,0.25,0.25);
-
 }
 
+#nav-list {
+    width: 100%;
+    padding: 15px;
+    text-align: center;
+}
+
+li {
+    display: inline;
+    margin-right: 15%;
+    transition: 0.3s;
+    border: .5px, solid transparent;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+li:hover {
+    border: .5px, solid black;
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.25);
+    padding: 15px;
+    border-radius: 10px;
+    opacity: .6;
+}
+
+/* ============================================================
+   SEARCH BAR (nav)
+   ============================================================ */
+.searchbar {
+    text-align: center;
+    width: 70%;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.searchinput {
+    border-radius: 20px;
+    box-shadow: 4px 4px 10px rgba(0.25,0.25,0.25,0.25);
+    border: .25px, solid black;
+    padding: 10px 10px;
+    width: 70%;
+    background-color: rgb(232, 232, 232);
+}
+
+.searchinput:hover {
+    background-color: rgb(255, 255, 255);
+}
+
+.searchinput:focus {
+    background-color: rgb(255, 255, 255);
+}
+
+/* ============================================================
+   PAGE BODY WRAPPER (generic)
+   ============================================================ */
 .homebody {
     margin: 0 auto;
 }
@@ -30,61 +89,9 @@ header {
     background-color: white;
 }
 
-li {
-    display: inline;
-
-    margin-right: 15%;
-    transition: 0.3s;
-
-     border: .5px, solid transparent;
-
-    padding: 15px;
-    border-radius: 10px;
-  
-}
-
-li:hover{
-    border: .5px, solid black;
-    box-shadow: 4px 4px 10px rgba(0,0,0,0.25);
-    padding: 15px;
-    border-radius: 10px;
-    opacity: .6;
-
-}
-#nav-list {
-    width: 100%;
-    padding: 15px;
-    text-align: center;
-    
-}
-
-.searchbar {
-    text-align: center;
-    width: 70%;
-    padding: 15px;
-    border-radius: 10px;
-    
-
-}
-
-.searchinput {
-    border-radius: 20px;
-    box-shadow: 4px 4px 10px rgba(0.25,0.25,0.25,0.25);
-    border: .25px, solid black;
-    padding: 10px 10px;
-    width: 70%;
-    background-color: rgb(232, 232, 232);
-}
-
-.searchinput:hover {
-    background-color: rgb(255, 255, 255);
-    
-}
-
-.searchinput:focus {
-    background-color: rgb(255, 255, 255);
-}
-
+/* ============================================================
+   QUESTIONNAIRE FORM PAGE
+   ============================================================ */
 .questionaire-group-container {
     display: flex;
     flex-direction: column;
@@ -106,152 +113,34 @@ li:hover{
     background-color: rgb(172, 18, 18);
 }
 
+#gender {
+    height: 54px;
+}
 
+/* ============================================================
+   SHARED RADIO GROUP STYLES (used by questionnaire + rating forms)
+   ============================================================ */
 .radio-row-container {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 10px; 
+    gap: 10px;
     width: 100%;
     margin-top: 10px;
 }
 
-
 .radio-column-item {
     display: flex;
-    flex-direction: column; 
-    align-items: center;    
-    gap: 5px;               
-    color: white;          
-}
-
-
-#gender {
-    height: 54px;
-}
-
-/* --- Outer Reset to Override .body1 center conflicts --- */
-.bio-page-wrapper {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding: 20px 0;
-    box-sizing: border-box;
-}
-
-/* Main Container (Dark Gray Background matching image_4a7515.png) */
-.bio-container {
-    background-color: #595959; /* Matching wireframe dark grey background */
-    width: 90%;
-    max-width: 1100px;
-    padding: 30px;
-    display: flex; /* Forces Left and Right columns side-by-side */
-    flex-direction: row;
-    gap: 30px;
-    box-sizing: border-box;
-    align-items: flex-start;
-}
-
-/* Common Wireframe Box Defaults */
-.wireframe-box {
-    background-color: #ffffff;
-    border: 2px solid #000000;
-    box-sizing: border-box;
-}
-
-/* ================= LEFT COLUMN ================= */
-.bio-sidebar {
-    width: 220px;
-    display: flex;
     flex-direction: column;
-    gap: 15px;
-    flex-shrink: 0;
-}
-
-/* Profile Picture Box */
-.profile-pic-box {
-    width: 100%;
-    height: 260px;
-    position: relative;
-}
-
-/* SVG Line Drawing for Crisp Non-overflowing 'X' */
-.x-svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-}
-
-/* Rating Row (Square Box + Text Box side-by-side) */
-.rating-summary-row {
-    display: flex;
-    flex-direction: row;
-    gap: 12px;
-    width: 100%;
-    align-items: stretch;
-}
-
-/* Small Icon Square */
-.small-icon-box {
-    width: 60px;
-    height: 60px;
-    flex-shrink: 0;
-}
-
-/* Rating Text Box */
-.rating-label-box {
-    flex-grow: 1;
-    padding: 6px;
-    display: flex;
     align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-size: 13px;
-    font-weight: bold;
-    color: #000000;
-    line-height: 1.2;
-    font-family: Arial, sans-serif;
+    gap: 5px;
+    color: white;
 }
 
-/* ================= RIGHT COLUMN ================= */
-.bio-main-content {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-/* Main Cards (Bio & Detailed Ratings) */
-.content-card {
-    padding: 20px;
-    font-family: Arial, sans-serif;
-}
-
-.bio-card {
-    min-height: 200px;
-}
-
-.rating-card {
-    min-height: 240px;
-}
-
-.content-card h3 {
-    margin-top: 0;
-    margin-bottom: 12px;
-    font-size: 18px;
-    font-weight: bold;
-    color: #000000;
-}
-
-.content-card p {
-    margin: 0;
-    font-size: 15px;
-    color: #000000;
-}
-
-/* Rate Roommate Page */
-
+/* ============================================================
+   RATE A ROOMMATE FORM PAGE
+   ============================================================ */
 .roommateratingformpage {
     width: 100%;
     display: flex;
@@ -279,11 +168,76 @@ li:hover{
     background-color: rgb(172, 18, 18);
 }
 
-.profile-img {
+/* ============================================================
+   BIO / PROFILE PAGE
+   ============================================================ */
+.bio-page-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+    box-sizing: border-box;
+}
+
+.bio-container {
+    background-color: #595959;
+    width: 90%;
+    max-width: 1100px;
+    padding: 30px;
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    box-sizing: border-box;
+    align-items: flex-start;
+}
+
+.wireframe-box {
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    box-sizing: border-box;
+}
+
+/* --- Bio page: left column (photo + rating summary) --- */
+.bio-sidebar {
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex-shrink: 0;
+}
+
+.profile-pic-box {
     width: 100%;
     height: 260px;
     position: relative;
     overflow: hidden;
+}
+
+.profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.x-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.rating-summary-row {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    width: 100%;
+    align-items: stretch;
+}
+
+.small-icon-box {
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
 }
 
 .star-svg {
@@ -292,6 +246,85 @@ li:hover{
     display: block;
 }
 
+.rating-label-box {
+    flex-grow: 1;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 13px;
+    font-weight: bold;
+    color: #000000;
+    line-height: 1.2;
+    font-family: Arial, sans-serif;
+}
+
+/* --- Bio page: right column (bio text + detailed ratings) --- */
+.bio-main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.content-card {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.bio-card {
+    min-height: 200px;
+}
+
+.rating-card {
+    min-height: 240px;
+}
+
+.content-card h3 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #000000;
+}
+
+.content-card p {
+    margin: 0;
+    font-size: 15px;
+    color: #000000;
+}
+
+/* --- Bio page: agree/disagree vote buttons (top-right corner) --- */
+.agree-disagree-corner {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 8px;
+}
+
+.vote-btn {
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    padding: 6px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.vote-btn:hover {
+    background-color: #eeeeee;
+}
+
+.vote-active {
+    background-color: #d4edda;
+    border-color: #28a745;
+}
+
+/* ============================================================
+   HELP PAGE
+   ============================================================ */
 .help-page-wrapper {
     background-color: #595959;
     width: 100%;
@@ -336,8 +369,9 @@ li:hover{
     padding-left: 20px;
 }
 
-/* home page */
-
+/* ============================================================
+   HOME PAGE
+   ============================================================ */
 .home-page-wrapper {
     background-color: #595959;
     width: 100%;
@@ -391,4 +425,67 @@ li:hover{
 .home-search-bar {
     display: flex;
     justify-content: center;
+}
+
+/* ============================================================
+   SEARCH RESULTS PAGE
+   ============================================================ */
+.search-results-wrapper {
+    background-color: #595959;
+    width: 100%;
+    padding: 30px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.search-results-heading {
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    margin-bottom: 25px;
+}
+
+.search-no-results {
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+}
+
+.search-results-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.result-card {
+    background-color: #ffffff;
+    border: 2px solid #000000;
+    width: 180px;
+    padding: 15px;
+    text-decoration: none;
+    color: #000000;
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.25);
+    font-family: Arial, sans-serif;
+}
+
+.result-card-img,
+.result-card-placeholder {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.result-card-placeholder svg {
+    width: 100%;
+    height: 100%;
+}
+
+.result-card-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.result-card-rating {
+    font-size: 14px;
 }

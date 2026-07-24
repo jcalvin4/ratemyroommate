@@ -38,7 +38,10 @@
         </div>
     </header>
     <div class="body1">
-        <div class="searchbar"> Search Person: <input type="search" placeholder="Search Person" class="searchinput"> </div>
+        <form method="GET" action="{{ url_for('search') }}" class="searchbar">
+            Search Person:
+            <input type="search" name="q" placeholder="Search Person" class="searchinput">
+        </form>
         {% with messages = get_flashed_messages() %}
              {% if messages %}
                 <div class="flash-messages">

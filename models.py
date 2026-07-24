@@ -54,3 +54,15 @@ class RoommateRating(db.Model):
 
     rater = db.relationship('User', foreign_keys=[rater_id])
     rated_user = db.relationship('User', foreign_keys=[rated_user_id])
+
+class ProfileVote(db.Model):
+    __tablename__ = 'profile_votes'
+
+    id = db.Column(db.Integer, primary_key=True)
+    voter_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    profile_user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    vote = db.Column(db.Boolean, nullable=False)  # True = agree, False = disagree
+
+    __table_args__ = (
+        db.UniqueConstraint('voter_id', 'profile_user_id', name='one_vote_per_voter_per_profile'),
+    )

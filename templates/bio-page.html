@@ -3,55 +3,72 @@
 
 {% block content %}
 <div class="bio-page-wrapper">
-    <div class="bio-container">
-        
-        <!-- LEFT COLUMN: Profile & Ratings -->
+    <div class="bio-container" style="position: relative;">
+
+        <div class="agree-disagree-corner">
+            <form method="POST" action="{{ url_for('vote_profile', user_id=profile_user.id) }}" style="display:inline;">
+                <input type="hidden" name="vote" value="agree">
+                <button type="submit" class="vote-btn {{ 'vote-active' if my_vote == True else '' }}" title="Agree">
+                    👍 {{ agree_count }}
+                </button>
+            </form>
+            <form method="POST" action="{{ url_for('vote_profile', user_id=profile_user.id) }}" style="display:inline;">
+                <input type="hidden" name="vote" value="disagree">
+                <button type="submit" class="vote-btn {{ 'vote-active' if my_vote == False else '' }}" title="Disagree">
+                    👎 {{ disagree_count }}
+                </button>
+            </form>
+        </div>
+
         <div class="bio-sidebar">
-            
             <div class="wireframe-box profile-pic-box">
-                <form method="POST" action="{{ url_for('update_profile_pic') }}" enctype="multipart/form-data" id="pic-upload-form">
-                    {{ pic_form.hidden_tag() }}
-                    <label for="pic-upload-input" style="display:block; width:100%; height:100%; cursor:pointer;">
-                        {% if questionnaire and questionnaire.profile_pic %}
-                            <img src="{{ questionnaire.profile_pic }}" alt="{{ db_user.fname }}'s Profile Picture" class="profile-img">
-                        {% else %}
-                            <svg class="x-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-                                <line x1="0" y1="0" x2="100" y2="100" stroke="#000" stroke-width="1"/>
-                                <line x1="100" y1="0" x2="0" y2="100" stroke="#000" stroke-width="1"/>
-                            </svg>
-                        {% endif %}
-                    </label>
-                    {{ pic_form.profile_pic(id="pic-upload-input", style="display:none;", onchange="document.getElementById('pic-upload-form').submit();") }}
-                </form>
+                {% if is_own_profile %}
+                    <form method="POST" action="{{ url_for('update_profile_pic') }}" enctype="multipart/form-data" id="pic-upload-form">
+                        {{ pic_form.hidden_tag() }}
+                        <label for="pic-upload-input" style="display:block; width:100%; height:100%; cursor:pointer;">
+                            {% if questionnaire and questionnaire.profile_pic %}
+                                <img src="{{ questionnaire.profile_pic }}" alt="{{ profile_user.fname }}'s Profile Picture" class="profile-img">
+                            {% else %}
+                                <svg class="x-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                                    <line x1="0" y1="0" x2="100" y2="100" stroke="#000" stroke-width="1"/>
+                                    <line x1="100" y1="0" x2="0" y2="100" stroke="#000" stroke-width="1"/>
+                                </svg>
+                            {% endif %}
+                        </label>
+                        {{ pic_form.profile_pic(id="pic-upload-input", style="display:none;", onchange="document.getElementById('pic-upload-form').submit();") }}
+                    </form>
+                {% else %}
+                    {% if questionnaire and questionnaire.profile_pic %}
+                        <img src="{{ questionnaire.profile_pic }}" alt="{{ profile_user.fname }}'s Profile Picture" class="profile-img">
+                    {% else %}
+                        <svg class="x-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                            <line x1="0" y1="0" x2="100" y2="100" stroke="#000" stroke-width="1"/>
+                            <line x1="100" y1="0" x2="0" y2="100" stroke="#000" stroke-width="1"/>
+                        </svg>
+                    {% endif %}
+                {% endif %}
             </div>
 
-            <!-- Small Rating Row -->
             <div class="rating-summary-row">
-                <!-- Small Square Box with Star -->
                 <div class="wireframe-box small-icon-box">
                     <svg class="star-svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
                         <polygon points="50,5 61,38 96,38 68,59 79,92 50,72 21,92 32,59 4,38 39,38"
                                  fill="gold" stroke="#000" stroke-width="2"/>
                     </svg>
                 </div>
-
-                <!-- Average Star Rating Label Box -->
                 <div class="wireframe-box rating-label-box">
                     <span>Average<br>Star<br>Rating:<br>{{ average_rating if average_rating is not none else 'N/A' }}</span>
                 </div>
             </div>
         </div>
 
-        <!-- RIGHT COLUMN: Bio & Star Ratings -->
         <div class="bio-main-content">
-            <!-- Bio Box -->
             <div class="wireframe-box content-card bio-card">
                 <h3>Bio:</h3>
                 <p>{{ questionnaire.bio if questionnaire and questionnaire.bio else 'No bio provided yet.' }}</p>
             </div>
 
-            <!-- Detailed Rating Box -->
-           <div class="wireframe-box content-card rating-card">
+            <div class="wireframe-box content-card rating-card">
                 <h3>Detailed star rating</h3>
                 {% if questionnaire %}
                     <ul>

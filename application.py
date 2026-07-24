@@ -72,6 +72,22 @@ def create_app(test_config=None):
         client_kwargs={'scope': 'phone openid email profile'}
     )
 
+    def get_average_rating(user_id):
+        from models import QuestionaireRating, RoommateRating
+        questionnaire = QuestionaireRating.query.filter_by(user_id=user_id).first()
+        received_ratings = RoommateRating.query.filter_by(rated_user_id=user_id).all()
+
+        all_scores = []
+        for r in received_ratings:
+            all_scores.append(r.cleanliness)
+            all_scores.append(r.communication)
+            all_scores.append(6 - r.noise)
+        if questionnaire:
+            all_scores.append(questionnaire.cleanliness)
+            all_scores.append(6 - questionnaire.noise)
+
+        return round(sum(all_scores) / len(all_scores), 1) if all_scores else None
+
     # --- Auth Decorator for Protected Routes ---
     def login_required(f):
         @wraps(f)
@@ -97,7 +113,7 @@ def create_app(test_config=None):
 
     @application.route("/init-db")
     def init_db():
-        from models import User, QuestionaireRating, RoommateRating
+        from models import User, QuestionaireRating, RoommateRating, ProfileVote
         db.create_all()
         return "Tables created!"
 
@@ -213,37 +229,8 @@ def create_app(test_config=None):
     @application.route("/bio")
     @login_required  
     def bio():
-       from models import User, QuestionaireRating, RoommateRating
-       db_user = User.query.filter_by(cognito_sub=session['user']['sub']).first()
-       questionnaire = QuestionaireRating.query.filter_by(user_id=db_user.id).first()
-       received_ratings = RoommateRating.query.filter_by(rated_user_id=db_user.id).all()
-
-       all_scores = []
-       for rating in received_ratings:
-           all_scores.append(rating.cleanliness)
-           all_scores.append(rating.communication)
-           all_scores.append(6 - rating.noise)
-       if questionnaire:
-           all_scores.append(questionnaire.cleanliness)
-           all_scores.append(6 - questionnaire.noise)
-       average_rating = round(sum(all_scores) / len(all_scores), 1) if all_scores else None
-
-       # Average communication score from received roommate ratings only
-       communication_scores = [r.communication for r in received_ratings]
-       average_communication = round(sum(communication_scores) / len(communication_scores), 1) if communication_scores else None
-
-       from forms import ProfilePicForm
-       pic_form = ProfilePicForm()
-
-       return render_template(
-           'bio-page.html',
-           user=session.get('user'),
-           db_user=db_user,
-           questionnaire=questionnaire,
-           average_rating=average_rating,
-           average_communication=average_communication,
-           pic_form=pic_form
-       )
+       user_id = session.get('user_db_id')
+       return redirect(url_for('profile', user_id=user_id))
 
     @application.route("/formpage", methods=['GET', 'POST'])
     @login_required
@@ -304,9 +291,90 @@ def create_app(test_config=None):
     def helppage():
         return render_template('helppage.html')
 
+    @application.route("/search")
+    def search():
+        from models import User, QuestionaireRating
+        from sqlalchemy import func
+        query = request.args.get('q', '').strip()
+        results = []
+        if query:
+            matches = User.query.filter(
+                db.or_(
+                    func.concat(User.fname, ' ', User.lname).ilike(f"%{query}%"),
+                    User.email.ilike(f"%{query}%")
+                )
+            ).all()
+            for person in matches:
+                questionnaire = QuestionaireRating.query.filter_by(user_id=person.id).first()
+                results.append({
+                    'user': person,
+                    'average_rating': get_average_rating(person.id),
+                    'profile_pic': questionnaire.profile_pic if questionnaire else None
+                })
+        return render_template('search-results.html', results=results, query=query, user=session.get('user'))
+
+    @application.route("/profile/<int:user_id>")
+    def profile(user_id):
+        from models import User, QuestionaireRating, RoommateRating, ProfileVote
+        profile_user = User.query.get_or_404(user_id)
+        questionnaire = QuestionaireRating.query.filter_by(user_id=user_id).first()
+        received_ratings = RoommateRating.query.filter_by(rated_user_id=user_id).all()
+
+        average_rating = get_average_rating(user_id)
+
+        communication_scores = [r.communication for r in received_ratings]
+        average_communication = round(sum(communication_scores) / len(communication_scores), 1) if communication_scores else None
+
+        agree_count = ProfileVote.query.filter_by(profile_user_id=user_id, vote=True).count()
+        disagree_count = ProfileVote.query.filter_by(profile_user_id=user_id, vote=False).count()
+
+        my_vote = None
+        voter_id = session.get('user_db_id')
+        if voter_id:
+            existing = ProfileVote.query.filter_by(voter_id=voter_id, profile_user_id=user_id).first()
+            if existing:
+                my_vote = existing.vote
+
+        is_own_profile = voter_id == user_id
+        pic_form = ProfilePicForm() if is_own_profile else None
+
+        return render_template(
+            'bio-page.html',
+            user=session.get('user'),
+            profile_user=profile_user,
+            questionnaire=questionnaire,
+            average_rating=average_rating,
+            average_communication=average_communication,
+            pic_form=pic_form,
+            is_own_profile=is_own_profile,
+            agree_count=agree_count,
+            disagree_count=disagree_count,
+            my_vote=my_vote
+        )
+
+    @application.route("/profile/<int:user_id>/vote", methods=['POST'])
+    @login_required
+    def vote_profile(user_id):
+        from models import ProfileVote
+
+        voter_id = session.get('user_db_id')
+        vote_value = request.form.get('vote')
+
+        if voter_id != user_id and vote_value in ('agree', 'disagree'):
+            existing = ProfileVote.query.filter_by(voter_id=voter_id, profile_user_id=user_id).first()
+            new_value = (vote_value == 'agree')
+
+            if existing:
+                existing.vote = new_value
+            else:
+                existing = ProfileVote(voter_id=voter_id, profile_user_id=user_id, vote=new_value)
+                db.session.add(existing)
+
+            db.session.commit()
+
+        return redirect(url_for('profile', user_id=user_id))
+
     return application
-
-
 
 application = create_app()
 

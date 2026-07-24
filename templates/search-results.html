@@ -1,0 +1,33 @@
+{% extends "basic_template.html" %}
+{% block title %}Search Results{% endblock %}
+{% block content %}
+<div class="search-results-wrapper">
+    <h2 class="search-results-heading">Results for "{{ query }}"</h2>
+
+    {% if results %}
+        <div class="search-results-grid">
+            {% for result in results %}
+                <a href="{{ url_for('profile', user_id=result.user.id) }}" class="result-card">
+                    {% if result.profile_pic %}
+                        <img src="{{ result.profile_pic }}" alt="{{ result.user.fname }}'s profile picture" class="result-card-img">
+                    {% else %}
+                        <div class="result-card-placeholder">
+                            <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+                                <line x1="0" y1="0" x2="100" y2="100" stroke="#000" stroke-width="1"/>
+                                <line x1="100" y1="0" x2="0" y2="100" stroke="#000" stroke-width="1"/>
+                            </svg>
+                        </div>
+                    {% endif %}
+                    <div class="result-card-name">{{ result.user.fname }} {{ result.user.lname }}</div>
+                    <div class="result-card-rating">
+                        {{ result.average_rating if result.average_rating is not none else 'No ratings yet' }}
+                        {% if result.average_rating is not none %} / 5{% endif %}
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="search-no-results">No results found for "{{ query }}".</p>
+    {% endif %}
+</div>
+{% endblock %}
