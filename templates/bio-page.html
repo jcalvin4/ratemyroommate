@@ -9,15 +9,20 @@
         <div class="bio-sidebar">
             <!-- Main Profile Pic Box with 'X' -->
             <div class="wireframe-box profile-pic-box">
-                {% if questionnaire and questionnaire.profile_pic %}
-                    <img src="{{ questionnaire.profile_pic }}" alt="{{ db_user.fname }}'s Profile Picture" class="profile-img">
-                {% else %}
-                    <!-- SVG Placeholder X -->
-                    <svg class="x-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-                        <line x1="0" y1="0" x2="100" y2="100" stroke="#000" stroke-width="1"/>
-                        <line x1="100" y1="0" x2="0" y2="100" stroke="#000" stroke-width="1"/>
-                    </svg>
-                {% endif %}
+                <form method="POST" action="{{ url_for('update_profile_pic') }}" enctype="multipart/form-data" id="pic-upload-form">
+                    {{ pic_form.hidden_tag() }}
+                    <label for="pic-upload-input" style="display:block; width:100%; height:100%; cursor:pointer;">
+                        {% if questionnaire and questionnaire.profile_pic %}
+                            <img src="{{ questionnaire.profile_pic }}" alt="{{ db_user.fname }}'s Profile Picture" class="profile-img">
+                        {% else %}
+                            <svg class="x-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                                <line x1="0" y1="0" x2="100" y2="100" stroke="#000" stroke-width="1"/>
+                                <line x1="100" y1="0" x2="0" y2="100" stroke="#000" stroke-width="1"/>
+                            </svg>
+                        {% endif %}
+                    </label>
+                    {{ pic_form.profile_pic(id="pic-upload-input", style="display:none;", onchange="document.getElementById('pic-upload-form').submit();") }}
+                </form>
             </div>
 
             <!-- Small Rating Row -->

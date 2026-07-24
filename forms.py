@@ -1,7 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import (StringField, TextAreaField, SelectField, 
-                     RadioField, BooleanField, DateField, 
-                     PasswordField,SubmitField
+                     RadioField, BooleanField, SubmitField
                      )
 from wtforms.validators import DataRequired
 from flask_wtf.file import FileField, FileAllowed, FileRequired
@@ -25,3 +24,6 @@ class RoommateRatingForm(FlaskForm):
     communication = RadioField('Communication', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')], validators=[DataRequired()])
     noise = RadioField('Noise Level', choices=[('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5')], validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+class ProfilePicForm(FlaskForm):
+    profile_pic = FileField('Profile Picture', validators=[FileRequired(), FileAllowed(['jpg', 'png'], 'Images only!')])

@@ -4,10 +4,36 @@ from flask import Flask, flash, render_template, request, redirect, url_for, ses
 from authlib.integrations.flask_client import OAuth
 from werkzeug.middleware.proxy_fix import ProxyFix  # <-- ADDED
 from markupsafe import escape
-from forms import QuestionaireForm, RoommateRatingForm
+from forms import QuestionaireForm, RoommateRatingForm, ProfilePicForm
 from flask_sqlalchemy import SQLAlchemy
+import boto3
+from werkzeug.utils import secure_filename
+import uuid
 
 db = SQLAlchemy()
+
+S3_BUCKET = 'roomiestatz-profile-pics-736395454139-us-west-2-an'
+S3_REGION = 'us-west-2'
+
+def upload_profile_pic(file, user_id):
+    if not file or file.filename == '':
+        return None
+
+    s3 = boto3.client('s3', region_name=S3_REGION)
+
+    filename = secure_filename(file.filename)
+    ext = filename.rsplit('.', 1)[-1] if '.' in filename else 'jpg'
+    unique_filename = f"profile_pics/{user_id}_{uuid.uuid4().hex}.{ext}"
+
+    s3.upload_fileobj(
+        file,
+        S3_BUCKET,
+        unique_filename,
+        ExtraArgs={'ContentType': file.content_type}
+    )
+
+    url = f"https://{S3_BUCKET}.s3.{S3_REGION}.amazonaws.com/{unique_filename}"
+    return url
 
 def create_app(test_config=None):
     application = Flask(__name__)
@@ -173,24 +199,25 @@ def create_app(test_config=None):
         received_ratings = RoommateRating.query.filter_by(rated_user_id=db_user.id).all()
 
         all_scores = []
-
         for rating in received_ratings:
             all_scores.append(rating.cleanliness)
             all_scores.append(rating.communication)
-            all_scores.append(6 - rating.noise)  # invert: quiet (low) becomes a high score
-
+            all_scores.append(6 - rating.noise)
         if questionnaire:
             all_scores.append(questionnaire.cleanliness)
-            all_scores.append(6 - questionnaire.noise)  # same inversion for self-assigned
-
+            all_scores.append(6 - questionnaire.noise)
         average_rating = round(sum(all_scores) / len(all_scores), 1) if all_scores else None
+
+        from forms import ProfilePicForm
+        pic_form = ProfilePicForm()
 
         return render_template(
             'bio-page.html',
             user=session.get('user'),
             db_user=db_user,
             questionnaire=questionnaire,
-            average_rating=average_rating
+            average_rating=average_rating,
+            pic_form=pic_form
         )
 
     @application.route("/formpage", methods=['GET', 'POST'])
@@ -208,7 +235,8 @@ def create_app(test_config=None):
             night_owl = form.night_owl.data
             early_riser = form.early_riser.data
             bio = form.bio.data
-            
+
+            profile_pic_url = upload_profile_pic(form.profile_pic.data, user_id)
 
             new_rating = QuestionaireRating(
                 user_id=user_id,
@@ -219,7 +247,8 @@ def create_app(test_config=None):
                 smoker=smoker,
                 night_owl=night_owl,
                 early_riser=early_riser,
-                bio=bio
+                bio=bio,
+                profile_pic=profile_pic_url
             )
             db.session.add(new_rating)
             db.session.commit()
@@ -227,6 +256,23 @@ def create_app(test_config=None):
             return redirect(url_for('bio'))
 
         return render_template('questionaireformpage.html', form=form, user=session.get('user'))
+    @application.route("/update-profile-pic", methods=['POST'])
+    @login_required
+    def update_profile_pic():
+        from models import User, QuestionaireRating
+        form = ProfilePicForm()
+
+        if form.validate_on_submit():
+            db_user = User.query.filter_by(cognito_sub=session['user']['sub']).first()
+            questionnaire = QuestionaireRating.query.filter_by(user_id=db_user.id).first()
+
+            if questionnaire and form.profile_pic.data:
+                profile_pic_url = upload_profile_pic(form.profile_pic.data, db_user.id)
+                questionnaire.profile_pic = profile_pic_url
+                db.session.commit()
+                flash("Profile picture updated!")
+
+        return redirect(url_for('bio'))
     
 
     return application
