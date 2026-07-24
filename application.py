@@ -172,16 +172,16 @@ def create_app(test_config=None):
         questionnaire = QuestionaireRating.query.filter_by(user_id=db_user.id).first()
         received_ratings = RoommateRating.query.filter_by(rated_user_id=db_user.id).all()
 
-        # Pool every individual score together: cleanliness/communication/noise
-        # from each roommate rating received, plus the self-assigned
-        # cleanliness/noise from the questionnaire.
         all_scores = []
 
         for rating in received_ratings:
-            all_scores.extend([rating.cleanliness, rating.communication, rating.noise])
+            all_scores.append(rating.cleanliness)
+            all_scores.append(rating.communication)
+            all_scores.append(6 - rating.noise)  # invert: quiet (low) becomes a high score
 
         if questionnaire:
-            all_scores.extend([questionnaire.cleanliness, questionnaire.noise])
+            all_scores.append(questionnaire.cleanliness)
+            all_scores.append(6 - questionnaire.noise)  # same inversion for self-assigned
 
         average_rating = round(sum(all_scores) / len(all_scores), 1) if all_scores else None
 
