@@ -68,16 +68,7 @@
             </div>
 
     {{ form.submit() }}
-           
-            {% for error in form.fname.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-            {% for error in form.lname.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-            {% for error in form.email.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
+        
             {% for error in form.age.errors %}
                 <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
@@ -102,6 +93,7 @@
             {% for error in form.bio.errors %}
                 <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
+
         <p>{{ form.submit() }}</p>
         </div>
     </form>
