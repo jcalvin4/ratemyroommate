@@ -1,0 +1,32 @@
+{% extends "basic_template.html" %}
+{% block title %}Rate a Roommate{% endblock %}
+{% block content %}
+<div class="roommateratingformpage">
+    <div class="roommaterating-group-container">
+        <div class="roommaterating-group">
+            <h2>Who would you like to rate?</h2>
+            <form method="GET" action="{{ url_for('ratearoommate') }}" style="display:flex; justify-content:center; margin-top: 10px;">
+                <input type="search" name="q" value="{{ query }}" placeholder="Search by name or email" class="searchinput">
+            </form>
+        </div>
+
+        {% if query %}
+            <div class="roommaterating-group">
+                {% if results %}
+                    <ul style="list-style:none; padding:0;">
+                        {% for person in results %}
+                            <li style="margin-bottom: 10px;">
+                                <a href="{{ url_for('rate_form', rated_user_id=person.id) }}" style="color:white; font-weight:bold;">
+                                    {{ person.fname }} {{ person.lname }} ({{ person.email }})
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No matches found for "{{ query }}".</p>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

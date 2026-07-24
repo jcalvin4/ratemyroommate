@@ -4,12 +4,14 @@
 <div class="roommateratingformpage">
     <form method="POST" action="">
         {{ form.hidden_tag() }}
+        
         <div class="roommaterating-group-container">
-
-            <div class="roommaterating-group" id="rated_user">
-                {{ form.rated_user.label }}
-                {{ form.rated_user() }}
+            
+            <div class="roommaterating-group">
+                <h2>Rating: {{ rated_user.fname }} {{ rated_user.lname }}</h2>
             </div>
+            
+            {{ form.rated_user_id(type="hidden") }}
 
             <div class="roommaterating-group">
                 {{ form.cleanliness.label }}
@@ -36,9 +38,9 @@
             </div>
 
             <div class="roommaterating-group">
-                {{ form.payment_reliability.label }}
+                {{ form.noise.label }}
                 <div class="radio-row-container">
-                    {% for subfield in form.payment_reliability %}
+                    {% for subfield in form.noise %}
                         <div class="radio-column-item">
                             {{ subfield.label }}
                             {{ subfield() }}
@@ -49,13 +51,16 @@
 
             <p>{{ form.submit() }}</p>
 
-            {% for error in form.rated_user.errors %}
+            {% for error in form.rated_user_id.errors %}
                 <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
             {% for error in form.cleanliness.errors %}
                 <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
             {% for error in form.communication.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+            {% for error in form.noise.errors %}
                 <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
 

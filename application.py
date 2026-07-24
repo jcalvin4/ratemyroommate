@@ -162,15 +162,36 @@ def create_app(test_config=None):
     @application.route("/about")
     def aboutpage():
         return render_template('about.html')
-
-    @application.route("/ratearoommate", methods=['GET', 'POST'])
-    @login_required  
+  
+    @application.route("/ratearoommate")
+    @login_required
     def ratearoommate():
-        form = RoommateRatingForm()
+        query = request.args.get('q', '').strip()
+        results = []
+
+        if query:
+            from models import User
+            results = User.query.filter(
+                db.or_(
+                    User.fname.ilike(f"%{query}%"),
+                    User.lname.ilike(f"%{query}%"),
+                    User.email.ilike(f"%{query}%")
+                )
+            ).all()
+
+        return render_template('search-roommate.html', results=results, query=query, user=session.get('user'))
+
+
+    @application.route("/rate-form/<int:rated_user_id>", methods=['GET', 'POST'])
+    @login_required
+    def rate_form(rated_user_id):
+        from models import User, RoommateRating
+        rated_user = User.query.get_or_404(rated_user_id)
+
+        form = RoommateRatingForm(rated_user_id=rated_user_id)
+
         if form.validate_on_submit():
-            from models import RoommateRating
             rater_id = session.get('user_db_id')
-            rated_user_id = int(form.rated_user_id.data)
             cleanliness = int(form.cleanliness.data)
             communication = int(form.communication.data)
             noise = int(form.noise.data)
@@ -186,7 +207,8 @@ def create_app(test_config=None):
             db.session.commit()
             flash("Roommate rating submitted successfully!")
             return redirect(url_for('home'))
-        return render_template('roommaterate.html', form=form, user=session.get('user'))
+
+        return render_template('roommaterate.html', form=form, rated_user=rated_user, user=session.get('user'))
   
     @application.route("/bio")
     @login_required  
