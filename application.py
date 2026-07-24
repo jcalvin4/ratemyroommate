@@ -139,20 +139,72 @@ def create_app(test_config=None):
     def aboutpage():
         return render_template('about.html')
 
-    @application.route("/ratearoommate")
+    @application.route("/ratearoommate", methods=['GET', 'POST'])
     @login_required  
     def ratearoommate():
         form = RoommateRatingForm()
+        if form.validate_on_submit():
+            from models import RoommateRating
+            rater_id = session.get('user_db_id')
+            rated_user_id = int(form.rated_user_id.data)
+            cleanliness = int(form.cleanliness.data)
+            communication = int(form.communication.data)
+            noise = int(form.noise.data)
+
+            new_rating = RoommateRating(
+                rater_id=rater_id,
+                rated_user_id=rated_user_id,
+                cleanliness=cleanliness,
+                communication=communication,
+                noise=noise
+            )
+            db.session.add(new_rating)
+            db.session.commit()
+            flash("Roommate rating submitted successfully!")
+            return redirect(url_for('home'))
         return render_template('roommaterate.html', form=form, user=session.get('user'))
+
     @application.route("/bio")
     @login_required  
     def bio():
-        return render_template('bio-page.html', user=session.get('user'))
+        from models import User, QuestionaireRating
+        user = User.query.filter_by(cognito_sub=session['user']['sub']).first()
+        questionnaire = QuestionaireRating.query.filter_by(user_id=user.id).first()
+        return render_template('bio-page.html', user=session.get('user'), questionnaire=questionnaire, db_user=user)
 
-    @application.route("/formpage")
+    @application.route("/formpage", methods=['GET', 'POST'])
     @login_required
     def formpage():
         form = QuestionaireForm()
+        if form.validate_on_submit():
+            from models import QuestionaireRating
+            user_id = session.get('user_db_id')
+            age = int(form.age.data)
+            gender = form.gender.data
+            cleanliness = int(form.cleanliness.data)
+            noise = int(form.noise.data)
+            smoker = form.smoker.data
+            night_owl = form.night_owl.data
+            early_riser = form.early_riser.data
+            bio = form.bio.data
+            
+
+            new_rating = QuestionaireRating(
+                user_id=user_id,
+                age=age,
+                gender=gender,
+                cleanliness=cleanliness,
+                noise=noise,
+                smoker=smoker,
+                night_owl=night_owl,
+                early_riser=early_riser,
+                bio=bio
+            )
+            db.session.add(new_rating)
+            db.session.commit()
+            flash("Questionnaire submitted successfully!")
+            return redirect(url_for('bio'))
+
         return render_template('questionaireformpage.html', form=form, user=session.get('user'))
     
 

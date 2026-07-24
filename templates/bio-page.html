@@ -9,8 +9,8 @@
         <div class="bio-sidebar">
             <!-- Main Profile Pic Box with 'X' -->
             <div class="wireframe-box profile-pic-box">
-                {% if user and user.profile_image %}
-                    <img src="{{ user.profile_image }}" alt="{{ user.name }}'s Profile Picture" class="profile-img">
+                {% if questionnaire and questionnaire.profile_pic %}
+                    <img src="{{ questionnaire.profile_pic }}" alt="{{ db_user.fname }}'s Profile Picture" class="profile-img">
                 {% else %}
                     <!-- SVG Placeholder X -->
                     <svg class="x-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -42,18 +42,19 @@
             <!-- Bio Box -->
             <div class="wireframe-box content-card bio-card">
                 <h3>Bio:</h3>
-                <p>{{ user.bio if user and user.bio else 'No bio provided yet.' }}</p>
+                <p>{{ questionnaire.bio if questionnaire and questionnaire.bio else 'No bio provided yet.' }}</p>
             </div>
 
             <!-- Detailed Rating Box -->
             <div class="wireframe-box content-card rating-card">
                 <h3>Detailed star rating</h3>
-                {% if user and user.ratings %}
+                {% if questionnaire %}
                     <ul>
-                        {% for rating in user.ratings %}
-                            <li>{{ rating.category }}: {{ rating.score }} / 5</li>
-                        {% endfor %}
+                        <li>Cleanliness: {{ questionnaire.cleanliness }} / 5</li>
+                        <li>Noise Level: {{ questionnaire.noise }} / 5</li>
                     </ul>
+                {% else %}
+                    <p>No ratings yet.</p>
                 {% endif %}
             </div>
         </div>

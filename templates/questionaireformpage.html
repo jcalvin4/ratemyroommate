@@ -40,9 +40,6 @@
                     {% endfor %}
                 </div>
             </div>
-
-            <div class="questionaire-group">{{ form.smoker.label}}
-            {{ form.smoker(size=32) }}</div>
             
             <div class="questionaire-group">{{ form.smoker.label}}
             {{ form.smoker(size=32) }}</div>
@@ -66,8 +63,6 @@
                     {% endfor %}
                 {% endif %}
             </div>
-
-    {{ form.submit() }}
         
             {% for error in form.age.errors %}
                 <span style="color: red;">[{{ error }}]</span>
