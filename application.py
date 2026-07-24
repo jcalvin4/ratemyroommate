@@ -69,7 +69,7 @@ def create_app(test_config=None):
         client_id='6luip31388jlngdepqlv2oq8h5',
         client_secret=os.environ.get('COGNITO_CLIENT_SECRET'), 
         server_metadata_url='https://cognito-idp.us-west-2.amazonaws.com/us-west-2_4lor5BvYC/.well-known/openid-configuration',
-        client_kwargs={'scope': 'phone openid email'}
+        client_kwargs={'scope': 'phone openid email profile'}
     )
 
     # --- Auth Decorator for Protected Routes ---
