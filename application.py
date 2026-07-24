@@ -254,6 +254,7 @@ def create_app(test_config=None):
             return redirect(url_for('bio'))
 
         return render_template('questionaireformpage.html', form=form, user=session.get('user'))
+
     @application.route("/update-profile-pic", methods=['POST'])
     @login_required
     def update_profile_pic():
