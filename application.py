@@ -163,14 +163,35 @@ def create_app(test_config=None):
             flash("Roommate rating submitted successfully!")
             return redirect(url_for('home'))
         return render_template('roommaterate.html', form=form, user=session.get('user'))
-
+  
     @application.route("/bio")
     @login_required  
     def bio():
-        from models import User, QuestionaireRating
-        user = User.query.filter_by(cognito_sub=session['user']['sub']).first()
-        questionnaire = QuestionaireRating.query.filter_by(user_id=user.id).first()
-        return render_template('bio-page.html', user=session.get('user'), questionnaire=questionnaire, db_user=user)
+        from models import User, QuestionaireRating, RoommateRating
+        db_user = User.query.filter_by(cognito_sub=session['user']['sub']).first()
+        questionnaire = QuestionaireRating.query.filter_by(user_id=db_user.id).first()
+        received_ratings = RoommateRating.query.filter_by(rated_user_id=db_user.id).all()
+
+        # Pool every individual score together: cleanliness/communication/noise
+        # from each roommate rating received, plus the self-assigned
+        # cleanliness/noise from the questionnaire.
+        all_scores = []
+
+        for rating in received_ratings:
+            all_scores.extend([rating.cleanliness, rating.communication, rating.noise])
+
+        if questionnaire:
+            all_scores.extend([questionnaire.cleanliness, questionnaire.noise])
+
+        average_rating = round(sum(all_scores) / len(all_scores), 1) if all_scores else None
+
+        return render_template(
+            'bio-page.html',
+            user=session.get('user'),
+            db_user=db_user,
+            questionnaire=questionnaire,
+            average_rating=average_rating
+        )
 
     @application.route("/formpage", methods=['GET', 'POST'])
     @login_required
