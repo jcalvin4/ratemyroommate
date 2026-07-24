@@ -51,12 +51,13 @@
             </div>
 
             <!-- Detailed Rating Box -->
-            <div class="wireframe-box content-card rating-card">
+           <div class="wireframe-box content-card rating-card">
                 <h3>Detailed star rating</h3>
                 {% if questionnaire %}
                     <ul>
                         <li>Cleanliness: {{ questionnaire.cleanliness }} / 5</li>
                         <li>Noise Level: {{ questionnaire.noise }} / 5</li>
+                        <li>Communication: {{ average_communication if average_communication is not none else 'No ratings yet' }} / 5</li>
                     </ul>
                 {% else %}
                     <p>No ratings yet.</p>

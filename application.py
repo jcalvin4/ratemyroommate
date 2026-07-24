@@ -213,32 +213,37 @@ def create_app(test_config=None):
     @application.route("/bio")
     @login_required  
     def bio():
-        from models import User, QuestionaireRating, RoommateRating
-        db_user = User.query.filter_by(cognito_sub=session['user']['sub']).first()
-        questionnaire = QuestionaireRating.query.filter_by(user_id=db_user.id).first()
-        received_ratings = RoommateRating.query.filter_by(rated_user_id=db_user.id).all()
+       from models import User, QuestionaireRating, RoommateRating
+       db_user = User.query.filter_by(cognito_sub=session['user']['sub']).first()
+       questionnaire = QuestionaireRating.query.filter_by(user_id=db_user.id).first()
+       received_ratings = RoommateRating.query.filter_by(rated_user_id=db_user.id).all()
 
-        all_scores = []
-        for rating in received_ratings:
-            all_scores.append(rating.cleanliness)
-            all_scores.append(rating.communication)
-            all_scores.append(6 - rating.noise)
-        if questionnaire:
-            all_scores.append(questionnaire.cleanliness)
-            all_scores.append(6 - questionnaire.noise)
-        average_rating = round(sum(all_scores) / len(all_scores), 1) if all_scores else None
+       all_scores = []
+       for rating in received_ratings:
+           all_scores.append(rating.cleanliness)
+           all_scores.append(rating.communication)
+           all_scores.append(6 - rating.noise)
+       if questionnaire:
+           all_scores.append(questionnaire.cleanliness)
+           all_scores.append(6 - questionnaire.noise)
+       average_rating = round(sum(all_scores) / len(all_scores), 1) if all_scores else None
 
-        from forms import ProfilePicForm
-        pic_form = ProfilePicForm()
+       # Average communication score from received roommate ratings only
+       communication_scores = [r.communication for r in received_ratings]
+       average_communication = round(sum(communication_scores) / len(communication_scores), 1) if communication_scores else None
 
-        return render_template(
-            'bio-page.html',
-            user=session.get('user'),
-            db_user=db_user,
-            questionnaire=questionnaire,
-            average_rating=average_rating,
-            pic_form=pic_form
-        )
+       from forms import ProfilePicForm
+       pic_form = ProfilePicForm()
+
+       return render_template(
+           'bio-page.html',
+           user=session.get('user'),
+           db_user=db_user,
+           questionnaire=questionnaire,
+           average_rating=average_rating,
+           average_communication=average_communication,
+           pic_form=pic_form
+       )
 
     @application.route("/formpage", methods=['GET', 'POST'])
     @login_required
